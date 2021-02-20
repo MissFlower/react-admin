@@ -1,0 +1,32 @@
+.form-wrap {
+  display: flex;
+  align-items: center;
+  width: 300px;
+  height: 100vh;
+  margin: auto;
+  color: #FFF;
+
+  .login {
+    width: 100%;
+  }
+
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 56px;
+    line-height: 56px;
+    color: #FFF;
+
+    .column {
+      font-size: 16px;
+      color: #FFF;
+    }
+
+    span {
+      font-size: 12px;
+      opacity: .3;
+      cursor: pointer;
+    }
+  }
+}

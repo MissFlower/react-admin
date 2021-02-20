@@ -1,3 +1,11 @@
+<!--
+ * @Description: 
+ * @Version: 0.1.0
+ * @Author: AiDongYang
+ * @Date: 2020-10-22 16:10:13
+ * @LastEditors: AiDongYang
+ * @LastEditTime: 2021-02-18 15:11:59
+-->
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -66,3 +74,10 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+### 添加配置文件 配置sass全局变量 webpack别名
+不需要eject暴露环境,强烈推荐使用这种方式!!!
+https://www.cnblogs.com/shidawang/p/12072831.html
+缺少react-scripts插件
+https://blog.csdn.net/qq_38054239/article/details/87880190

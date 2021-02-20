@@ -1,11 +1,17 @@
-import React from 'react';
-import {Switch, Route, HashRouter } from 'react-router-dom';
+/*
+ * @Description:
+ * @Version: 0.1.0
+ * @Author: AiDongYang
+ * @Date: 2020-10-22 16:10:13
+ * @LastEditors: AiDongYang
+ * @LastEditTime: 2021-02-20 09:53:57
+ */
+import React from 'react'
+import { Switch, Route, HashRouter } from 'react-router-dom'
 // import logo from './logo.svg';
-import './App.css';
 
-import Home from './views/Home'
-import About from './views/About'
-import AboutNew from './views/AboutNew'
+import Home from './views/Home/index'
+import Login from './views/Login'
 
 class App extends React.Component {
   constructor(props) {
@@ -14,14 +20,23 @@ class App extends React.Component {
   }
 
   render() {
-    return(
-      <HashRouter>
-        <Switch>
-          <Route component={Home} exact path="/" />
-          <Route component={About} exact path="/about" />
-          <Route component={AboutNew} path="/about/new" />
-        </Switch>
-      </HashRouter>
+    return (
+      <div>
+        <HashRouter>
+          <Switch>
+            <Route
+              component={Home}
+              exact
+              path="/"
+            />
+            <Route
+              component={Login}
+              path="/login"
+              exact
+            />
+          </Switch>
+        </HashRouter>
+      </div>
     )
   }
 }
@@ -47,4 +62,4 @@ class App extends React.Component {
 //   );
 // }
 
-export default App;
+export default App
