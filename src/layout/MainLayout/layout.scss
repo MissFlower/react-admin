@@ -1,0 +1,20 @@
+.layout-wrap {
+  height: 100vh;
+}
+
+.layout-header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  background-color: #fff;
+
+  @include webkit(box-shadow, 0 3px 16px 0 rgba(0, 0, 0, .1));
+}
+
+.layout-content {
+  padding: 12px;
+  border: 18px solid #f7f7f7;
+  background-color: #fff;
+}

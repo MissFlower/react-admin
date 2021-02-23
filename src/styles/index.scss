@@ -1,7 +1,9 @@
 @import './normalize.scss';
 @import '~antd/dist/antd.css';
+@import './sidebar.scss';
 
-body, html {
+body,
+html {
+  color: #fff;
   background-color: #001529;
-  color: #FFF;
 }

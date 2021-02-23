@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2020-10-22 16:10:13
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-20 09:53:57
+ * @LastEditTime: 2021-02-23 18:16:35
  */
 import React from 'react'
 import { Switch, Route, HashRouter } from 'react-router-dom'
@@ -12,6 +12,8 @@ import { Switch, Route, HashRouter } from 'react-router-dom'
 
 import Home from './views/Home/index'
 import Login from './views/Login'
+
+import PrivateRouter from 'src/components/PrivateRouter'
 
 class App extends React.Component {
   constructor(props) {
@@ -21,22 +23,14 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <HashRouter>
-          <Switch>
-            <Route
-              component={Home}
-              exact
-              path="/"
-            />
-            <Route
-              component={Login}
-              path="/login"
-              exact
-            />
-          </Switch>
-        </HashRouter>
-      </div>
+      <HashRouter>
+        <Switch>
+          <PrivateRouter
+            path="/index"
+            exact
+          />
+        </Switch>
+      </HashRouter>
     )
   }
 }

@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-19 17:42:23
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-20 15:03:43
+ * @LastEditTime: 2021-02-23 11:34:02
  */
 module.exports = {
   'env': {
@@ -137,9 +137,10 @@ module.exports = {
       'beforeColon': false,
       'afterColon': true
     }],
-    // 要求在注释周围有空行 ( 要求在块级注释之前有一空行)
-    'lines-around-comment': [2, {
-      'beforeBlockComment': true
+    // 要求在注释周围有空行
+    'lines-around-comment': [0, {
+      'beforeBlockComment': false,
+      'beforeLineComment': false
     }],
     'func-style': 0,
     // 强制回调函数最大嵌套深度 5层
@@ -405,6 +406,8 @@ module.exports = {
     'react/jsx-filename-extension': [2, {
       'extensions': ['.js', '.jsx']
     }],
+    // 强制组件方法顺序
+    'react/sort-comp': 1,
     // jsx return多行加()
     'react/jsx-wrap-multilines': ['error', {
       'declaration': 'parens-new-line',

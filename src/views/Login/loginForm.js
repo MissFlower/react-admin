@@ -4,35 +4,65 @@
  * @Author: AiDongYang
  * @Date: 2021-02-18 17:22:42
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-20 16:58:09
+ * @LastEditTime: 2021-02-23 11:39:36
  */
 import React, { Component } from 'react'
+// 通过withRouter加工后的组件会多出一个history props 这是就可以通过history的push方法跳转路由了
+import { withRouter } from 'react-router-dom'
 
 import { Form, Input, Button, Row, Col, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 // validate
-import { passwordValidate, validEmail } from 'src/utils/validate'
+import { passwordReg, validEmail } from 'src/utils/validate'
+// 加密
+import CryptoJs from 'crypto-js'
 // API
 import { login } from 'src/api/user'
 // 组件
 import VerifyCode from 'src/components/VerifyCode'
+// token
+import { setToken } from 'src/utils/token'
+import { TOKEN_NAME } from 'src/settings'
 
 class LoginForm extends Component {
   constructor() {
     super()
     this.state = {
       username: '',
-      verifyCodeBtnDisable: true
+      password: '',
+      verifyCode: '',
+      verifyCodeBtnDisable: true,
+      module: 'login',
+      loading: false
+    }
+  }
+
+  componentWillUnmount = () => {
+    this.setState = (state, callback) => {
+      return
     }
   }
 
   onFinish = async values => {
     console.log('Received values of form: ', values)
     try {
-      const data = await login()
-      console.log(data)
+      const { username, password, verifyCode } = this.state
+      this.setState({
+        loading: true
+      })
+      const { token } = await login({
+        username,
+        password: CryptoJs.MD5(password).toString(),
+        code: verifyCode
+      })
+      setToken(TOKEN_NAME, token)
+      this.props.history.push('/index')
     } catch (error) {
       console.log(error)
+    } finally {
+      this.setState({
+        loading: false
+      })
     }
   }
 
@@ -49,12 +79,31 @@ class LoginForm extends Component {
     })
   }
 
+  // password输入
+  passwordChange = e => {
+    const val = e.target.value
+    this.setState({
+      password: val
+    })
+  }
+
+  // verifyCode输入
+  verifyCodeChange = e => {
+    const val = e.target.value
+    this.setState({
+      verifyCode: val
+    })
+  }
+
   render() {
     const _this = this
     const {
       username,
-      verifyCodeBtnDisable
+      verifyCodeBtnDisable,
+      module,
+      loading
     } = this.state
+    // console.log(`数据改变---${username}---render函数重新执行`)
     return (
       <div className="login">
         <div className="form-header">
@@ -113,7 +162,7 @@ class LoginForm extends Component {
                   message: 'Please input your Password!'
                 },
                 {
-                  pattern: passwordValidate,
+                  pattern: passwordReg,
                   message: '请输入6-10位的数字加字母组合!'
                 }
               ]}
@@ -123,6 +172,7 @@ class LoginForm extends Component {
                 type="password"
                 placeholder="Password"
                 autoComplete="on"
+                onChange={this.passwordChange}
               />
             </Form.Item>
 
@@ -145,11 +195,13 @@ class LoginForm extends Component {
                   <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     placeholder="VerifyCode"
+                    onChange={this.verifyCodeChange}
                   />
                 </Col>
                 <Col span={9}>
                   <VerifyCode
                     username={username}
+                    module={module}
                     verifyCodeBtnDisable={verifyCodeBtnDisable}
                   />
                 </Col>
@@ -162,6 +214,7 @@ class LoginForm extends Component {
                 htmlType="submit"
                 className="login-form-button"
                 block
+                loading={loading}
               >
                 登录
               </Button>
@@ -174,4 +227,4 @@ class LoginForm extends Component {
   }
 }
 
-export default LoginForm
+export default withRouter(LoginForm)

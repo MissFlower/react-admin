@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-18 17:22:53
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-20 16:58:28
+ * @LastEditTime: 2021-02-22 16:46:04
  */
 import React, { Component } from 'react'
 
@@ -12,7 +12,11 @@ import { Form, Input, Button, Row, Col } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 
 // validate
-import { validEmail } from 'src/utils/validate'
+import { validEmail, validPassword } from 'src/utils/validate'
+// 加密
+import CryptoJs from 'crypto-js'
+// API
+import { register } from 'src/api/user'
 // 组件
 import VerifyCode from 'src/components/VerifyCode'
 
@@ -21,12 +25,29 @@ class RegisterForm extends Component {
     super()
     this.state = {
       username: '',
-      verifyCodeBtnDisable: true
+      password: '',
+      surePassword: '',
+      verifyCode: '',
+      verifyCodeBtnDisable: true,
+      module: 'register'
     }
+    this.refForm = React.createRef()
+    this.refPassword = React.createRef()
   }
 
-  onFinish = values => {
+  onFinish = async values => {
     console.log('Received values of form: ', values)
+    const { username, password, verifyCode } = this.state
+    try {
+      const data = await register({
+        username,
+        password: CryptoJs.MD5(password).toString(),
+        code: verifyCode
+      })
+      this.toggleForm('login')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   toggleForm = type => {
@@ -42,10 +63,39 @@ class RegisterForm extends Component {
     })
   }
 
+  // password输入
+  passwordChange = e => {
+    const val = e.target.value
+    this.setState({
+      password: val
+    })
+    if (this.state.surePassword) {
+      this.refForm.current.validateFields(['surePassword'])
+    }
+  }
+
+  // surePassword输入
+  surePasswordChange = e => {
+    const val = e.target.value
+    this.setState({
+      surePassword: val
+    })
+  }
+
+  // verifyCode输入
+  verifyCodeChange = e => {
+    const val = e.target.value
+    this.setState({
+      verifyCode: val
+    })
+  }
+
   render() {
     const {
       username,
-      verifyCodeBtnDisable
+      password,
+      verifyCodeBtnDisable,
+      module
     } = this.state
     const _this = this
     return (
@@ -58,9 +108,10 @@ class RegisterForm extends Component {
         <div className="form-content">
           <Form
             name="normal_login"
+            ref={this.refForm}
             className="login-form"
             initialValues={{
-              remember: true
+              // surePassword: ''
             }}
             onFinish={this.onFinish}
           >
@@ -99,24 +150,54 @@ class RegisterForm extends Component {
                 {
                   required: true,
                   message: 'Please input your Password!'
-                }
+                },
+                ({ getFieldValue }) => ({
+                  async validator(_, value) {
+                    const isPass = validPassword(value)
+                    if (!isPass) {
+                      return Promise.reject('请输入6-10位的字母加数字组合!')
+                    }
+                    return Promise.resolve()
+                  }
+                })
               ]}
             >
               <Input
+                value={password}
+                ref={this.refPassword}
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 type="password"
                 placeholder="Password"
                 autoComplete="on"
+                onChange={this.passwordChange}
               />
             </Form.Item>
 
             <Form.Item
-              name="SurePassword"
+              name="surePassword"
               rules={[
                 {
                   required: true,
                   message: 'Please input your SurePassword!'
-                }
+                },
+                ({ getFieldValue }) => ({
+                  async validator(_, value) {
+                    // console.log(_this.refPassword.current)
+                    console.log(_this.refForm)
+                    const isPass = validPassword(value)
+                    if (!isPass) {
+                      return Promise.reject('请输入6-10位的字母加数字组合!')
+                    }
+                    const password = getFieldValue('password')
+                    console.log(value, password)
+                    if (password !== '' && value !== password) {
+                      return Promise.reject('确认密码和密码不一致!')
+                    }
+                    await _this.refForm.current.resetFields(['password'])
+                    await _this.refForm.current.setFieldsValue({ password })
+                    return Promise.resolve()
+                  }
+                })
               ]}
             >
               <Input
@@ -124,15 +205,20 @@ class RegisterForm extends Component {
                 type="password"
                 placeholder="SurePassword"
                 autoComplete="on"
+                onChange={this.surePasswordChange}
               />
             </Form.Item>
 
             <Form.Item
-              name="VerifyCode"
+              name="verifyCode"
               rules={[
                 {
                   required: true,
                   message: 'Please input your VerifyCode!'
+                },
+                {
+                  len: 6,
+                  message: '请输入6位有效验证码!'
                 }
               ]}
             >
@@ -141,11 +227,13 @@ class RegisterForm extends Component {
                   <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     placeholder="VerifyCode"
+                    onChange={this.verifyCodeChange}
                   />
                 </Col>
                 <Col span={9}>
                   <VerifyCode
                     username={username}
+                    module={module}
                     verifyCodeBtnDisable={verifyCodeBtnDisable}
                   />
                 </Col>

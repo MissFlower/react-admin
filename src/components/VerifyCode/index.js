@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-20 14:14:35
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-20 18:00:53
+ * @LastEditTime: 2021-02-22 14:51:48
  */
 import React, { Component } from 'react'
 import { Button } from 'antd'
@@ -32,6 +32,16 @@ class VerifyCode extends Component {
     })
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (this.props.username !== nextProps.username) {
+      return true
+    }
+    if (this.props.verifyCodeBtnDisable !== nextProps.verifyCodeBtnDisable) {
+      return true
+    }
+    return false
+  }
+
   // 销毁生命周期
   componentWillUnmount() {
     clearInterval(timer)
@@ -44,9 +54,10 @@ class VerifyCode extends Component {
       verifyCodeLoading: true
     })
     try {
+      const { username, module } = this.state
       const data = await getVerifyCode({
-        username: this.state.username,
-        module: 'login'
+        username,
+        module
       })
       this.countDown()
     } catch (error) {
@@ -77,6 +88,7 @@ class VerifyCode extends Component {
   }
 
   render() {
+    console.log('子组件刷新')
     const {
       verifyCodeLoading,
       verifyCodeBtnDisable,
