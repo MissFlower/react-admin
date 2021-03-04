@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-19 17:42:23
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-23 11:34:02
+ * @LastEditTime: 2021-03-02 14:56:32
  */
 module.exports = {
   'env': {
@@ -313,14 +313,21 @@ module.exports = {
     'no-this-before-super': 2,
     // 禁止不必要的计算性能键对象的文字
     'no-useless-computed-key': 0,
-    // 要求使用 let 或 const 而不是 var
-    'no-var': 1,
+    // 一个变量关键字（var，let 或 const）只声明一个变量
+    'one-var': [2, {
+      'initialized': 'never' // 每个作用域要求多个变量声明用于初始化变量
+    }],
+    // 使用 const 声明初始赋值后永远不重新赋值的变量
+    'prefer-const': 2,
     // 要求或禁止对象字面量中方法和属性使用简写语法
     'object-shorthand': 0,
     // 要求使用箭头函数作为回调
     'prefer-arrow-callback': 0,
-    // 要求使用 const 声明那些声明后不再被修改的变量
-    'prefer-const': 0,
+    // 不允许存在声明但未使用的变量，函数和函数的参数
+    'no-unused-vars': [2, {
+      'vars': 'all', // 检查全局范围内的变量
+      'args': 'none' // 不检查参数
+    }],
     // 要求在合适的地方使用 Reflect 方法
     'prefer-reflect': 0,
     // 要求使用扩展运算符而非 .apply()
@@ -418,8 +425,6 @@ module.exports = {
       'logical': 'ignore',
       'prop': 'ignore'
     }],
-    // 禁止未使用的变量
-    'no-unused-vars': 0,
     // 对象之间空格
     'object-curly-spacing': [2, 'always', {
       objectsInObjects: false

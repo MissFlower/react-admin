@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-20 14:14:35
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-22 14:51:48
+ * @LastEditTime: 2021-03-02 09:54:10
  */
 import React, { Component } from 'react'
 import { Button } from 'antd'
@@ -32,15 +32,15 @@ class VerifyCode extends Component {
     })
   }
 
-  shouldComponentUpdate(nextProps) {
-    if (this.props.username !== nextProps.username) {
-      return true
-    }
-    if (this.props.verifyCodeBtnDisable !== nextProps.verifyCodeBtnDisable) {
-      return true
-    }
-    return false
-  }
+  // shouldComponentUpdate(nextProps) {
+  //   if (this.props.username !== nextProps.username) {
+  //     return true
+  //   }
+  //   if (this.props.verifyCodeBtnDisable !== nextProps.verifyCodeBtnDisable) {
+  //     return true
+  //   }
+  //   return false
+  // }
 
   // 销毁生命周期
   componentWillUnmount() {
@@ -55,7 +55,7 @@ class VerifyCode extends Component {
     })
     try {
       const { username, module } = this.state
-      const data = await getVerifyCode({
+      await getVerifyCode({
         username,
         module
       })
@@ -88,7 +88,6 @@ class VerifyCode extends Component {
   }
 
   render() {
-    console.log('子组件刷新')
     const {
       verifyCodeLoading,
       verifyCodeBtnDisable,

@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-22 17:03:18
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-23 18:14:14
+ * @LastEditTime: 2021-02-25 18:13:23
  */
 import React, { Component } from 'react'
 
@@ -15,7 +15,7 @@ import './layout.scss'
 
 import Sidebar from '../components/Sidebar'
 import Navbar from '../components/Navbar'
-import PrivateRouter from 'src/components/PrivateRouter'
+import RouterView from './routerView'
 
 class MainLayout extends Component {
   constructor(props) {
@@ -25,24 +25,33 @@ class MainLayout extends Component {
     }
   }
 
-  toggle = collapsed => {
+  UNSAFE_componentWillMount() {
     this.setState({
-      collapsed
+      collapsed: JSON.parse(localStorage.getItem('collapsed'))
     })
   }
 
+  toggleCollapsed = () => {
+    const collapsed = !this.state.collapsed
+    this.setState({
+      collapsed
+    })
+    localStorage.setItem('collapsed', collapsed)
+  }
+
   render() {
+    const { collapsed } = this.state
     return (
       <Layout className="layout-wrap">
-        <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-          <Sidebar />
+        <Sider trigger={null} collapsible collapsed={collapsed}>
+          <Sidebar collapsed={collapsed} />
         </Sider>
         <Layout>
           <Header className="layout-header">
-            <Navbar toggle={this.toggle} />
+            <Navbar collapsed={collapsed} toggleCollapsed={this.toggleCollapsed} />
           </Header>
           <Content className="layout-content">
-            <PrivateRouter />
+            <RouterView />
           </Content>
         </Layout>
       </Layout>

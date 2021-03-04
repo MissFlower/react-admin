@@ -4,7 +4,7 @@
  * @Author: DoveyLoveyCora
  * @Date: 2020-08-16 17:09:42
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-19 18:24:17
+ * @LastEditTime: 2021-03-02 09:47:27
  */
 import axios from 'axios'
 import qs from 'qs'
@@ -13,8 +13,8 @@ import qs from 'qs'
 // import { Message } from 'element-ui'
 import { message } from 'antd'
 // import { UPDATE_REQUEST_COUNT } from 'src/store/modules/common/types'
-// import { getToken } from '@/utils/token'
-// import defaultSettings from 'src/settings'
+import { getToken } from '@/utils/token'
+import defaultSettings from 'src/settings'
 import { addRequest, removeRequest } from './cancelRequest'
 
 // 请求超时时间
@@ -51,10 +51,11 @@ http.interceptors.request.use(config => {
   //   store.commit(UPDATE_REQUEST_COUNT, 1)
   // }
 
-  // const token = getToken(defaultSettings.TOKEN_NAME)
-  // if (token) {
-  //   config.headers[defaultSettings.TOKEN_NAME] = token
-  // }
+  const token = getToken(defaultSettings.TOKEN_NAME)
+  if (token) {
+    config.headers[defaultSettings.TOKEN_NAME] = token
+    config.headers[defaultSettings.USER_NAME] = getToken(defaultSettings.USER_NAME)
+  }
   return config
 },
 error => {

@@ -1,0 +1,25 @@
+.table-list-wrap {
+  margin-top: 24px;
+
+  .table-operation {
+    .operation-left {
+      float: left;
+    }
+
+    .operation-right {
+      float: right;
+    }
+  }
+
+  .table-wrap {
+    margin-top: 12px;
+  }
+
+  .table-footer {
+    margin-top: 12px;
+
+    .ant-pagination {
+      text-align: right;
+    }
+  }
+}

@@ -4,16 +4,18 @@
  * @Author: AiDongYang
  * @Date: 2020-10-22 16:10:13
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-23 18:16:35
+ * @LastEditTime: 2021-03-02 17:39:51
  */
-import React from 'react'
-import { Switch, Route, HashRouter } from 'react-router-dom'
-// import logo from './logo.svg';
+import React, { Suspense } from 'react'
+import { Switch, BrowserRouter, Redirect } from 'react-router-dom'
 
-import Home from './views/Home/index'
-import Login from './views/Login'
+import { Spin } from 'antd'
 
 import PrivateRouter from 'src/components/PrivateRouter'
+
+// TODO 路由列表在做权限的时候会进行处理 这里的路由应该是处理后的权限路由
+import { constantRouter } from 'src/router'
+const routes = [...constantRouter]
 
 class App extends React.Component {
   constructor(props) {
@@ -21,39 +23,40 @@ class App extends React.Component {
     this.state = {}
   }
 
+  renderRoute = routes => {
+    // const routeList = new Set()
+    // routes.map(route => {
+    //   routeList.add({
+    //     path: route.path,
+    //     component: route.component,
+    //     exact: !route.path === '/app'
+    //   })
+    // })
+    // const routeLists = []
+
+    return routes.map(item => (
+      <PrivateRouter
+        path={item.path}
+        key={item.path}
+        component={item.component}
+        exact={item.path !== '/app'}
+      />
+    ))
+  }
+
   render() {
+    // console.log(this.renderRoute(routes))
     return (
-      <HashRouter>
-        <Switch>
-          <PrivateRouter
-            path="/index"
-            exact
-          />
-        </Switch>
-      </HashRouter>
+      <Suspense fallback={<div className="loading"><Spin size="large" /></div>}>
+        <BrowserRouter>
+          <Switch>
+            {this.renderRoute(routes)}
+            <Redirect to="/app/index" from="" />
+          </Switch>
+        </BrowserRouter>
+      </Suspense>
     )
   }
 }
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
 
 export default App

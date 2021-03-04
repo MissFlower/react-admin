@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-22 18:12:11
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-23 10:17:52
+ * @LastEditTime: 2021-02-26 09:34:23
  */
 import React, { Component, Fragment } from 'react'
 import {
@@ -17,25 +17,19 @@ const { createElement } = React
 class Navbar extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      collapsed: false
-    }
   }
 
-  toggle = async() => {
-    await this.setState({
-      collapsed: !this.state.collapsed
-    })
-    this.props.toggle(this.state.collapsed)
+  toggleCollapsed = async() => {
+    this.props.toggleCollapsed()
   }
 
   render() {
-    const { collapsed } = this.state
     return (
       <Fragment>
-        {createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+        {createElement(this.props.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
           className: 'trigger',
-          onClick: this.toggle
+          style: { fontSize: '16px' },
+          onClick: this.toggleCollapsed
         })}
       </Fragment>
     )

@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-18 17:22:53
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-22 16:46:04
+ * @LastEditTime: 2021-03-02 14:42:07
  */
 import React, { Component } from 'react'
 
@@ -39,7 +39,7 @@ class RegisterForm extends Component {
     console.log('Received values of form: ', values)
     const { username, password, verifyCode } = this.state
     try {
-      const data = await register({
+      await register({
         username,
         password: CryptoJs.MD5(password).toString(),
         code: verifyCode

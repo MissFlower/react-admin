@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-22 18:10:08
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-23 16:19:00
+ * @LastEditTime: 2021-02-26 13:41:43
  */
 import React, { Component, Fragment } from 'react'
 
@@ -22,7 +22,7 @@ class Sidebar extends Component {
         <h1 className="logo">
           <span>LOGO</span>
         </h1>
-        <MenuItem />
+        <MenuItem collapsed={this.props.collapsed} />
       </Fragment>
     )
   }
