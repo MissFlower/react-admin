@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 
 import { Pagination } from 'antd'
-
 class PaginationComponent extends Component {
   static propTypes = {
     pageSize: PropTypes.number,
@@ -22,7 +21,7 @@ class PaginationComponent extends Component {
     super(props)
   }
 
-  showTotal = total => `总计${total}条`
+  showTotal = total => `共 ${total} 条`
 
   // 每页条数改变
   onShowSizeChange = (pageIndex, pageSize) => {

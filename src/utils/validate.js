@@ -9,6 +9,14 @@
 export const passwordReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9a-zA-Z]{6,10}$/
 
 /**
+ * @param {string} path
+ * @returns {Boolean}
+ */
+export function isExternal(path) {
+  return /^(https?:|mailto:|tel:)/.test(path)
+}
+
+/**
  * @param {string} email
  * @returns {Boolean}
  */

@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2020-10-22 16:10:13
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-19 18:13:56
+ * @LastEditTime: 2021-03-05 09:49:44
  */
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -12,9 +12,15 @@ import 'src/styles/index.scss'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
+import { ConfigProvider } from 'antd'
+// 在需要用到的 组件文件中引入中文语言包
+import zhCN from 'antd/es/locale/zh_CN'
+
 ReactDOM.render(
   // <React.StrictMode>
-  <App />,
+  <ConfigProvider locale={zhCN}>
+    <App />
+  </ConfigProvider>,
   // </React.StrictMode>,
   document.getElementById('root')
 )

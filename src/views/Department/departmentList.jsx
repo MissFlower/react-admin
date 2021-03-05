@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 14:45:28
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-04 18:00:58
+ * @LastEditTime: 2021-03-05 16:23:49
  */
 import React, { Component, Fragment } from 'react'
 
@@ -13,6 +13,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 import { getDepartmentList, deleteDepartmentList, changeStatus } from 'src/api/department'
 
+import SearchFormWrap from 'src/components/SearchFormWrap'
 import TableListWrap from 'src/components/TableListWrap'
 import Pagination from 'src/components/Pagination'
 
@@ -69,9 +70,11 @@ class DepartmentList extends Component {
     this.refForm = null
   }
 
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
+    const { name } = this.refForm.getFieldsValue()
+    const params = Object.assign(this.state.params, { name })
     this.getList({
-      ...this.state.params
+      ...params
     })
   }
 
@@ -211,31 +214,34 @@ class DepartmentList extends Component {
     }
     return (
       <Fragment>
-        <Form
-          layout="inline"
-          ref={el => this.refForm = el}
-          onFinish={this.search}
-          initialValues={{
-            name: '123'
-          }}
-        >
-          <Form.Item
-            name="name"
-            label="部门名称"
+        <SearchFormWrap>
+          <Form
+            layout="inline"
+            ref={el => this.refForm = el}
+            onFinish={this.search}
+            initialValues={{
+              name: '研发部'
+            }}
           >
-            <Input placeholder="请输入部门名称" onChange={this.nameChange} />
-          </Form.Item>
+            <Form.Item
+              name="name"
+              label="部门名称"
+            >
+              <Input placeholder="请输入部门名称" onChange={this.nameChange} />
+            </Form.Item>
 
-          <Form.Item shouldUpdate className="search-btn">
-            <Button type="primary" htmlType="submit">搜索</Button>
-            <Button onClick={this.reset}>重置</Button>
-          </Form.Item>
-        </Form>
+            <Form.Item shouldUpdate className="search-btn">
+              <Button type="primary" htmlType="submit">搜索</Button>
+              <Button onClick={this.reset}>重置</Button>
+            </Form.Item>
+          </Form>
+        </SearchFormWrap>
 
         <TableListWrap>
           <div slot="header">
             <Button type="primary" className="operation-left" disabled={this.batchDeleteDisabled()} onClick={() => this.deleteDepartmentListHandle()}>批量删除</Button>
             <Button type="primary" className="operation-right">数据下载</Button>
+            <Button type="primary" className="operation-right">数据对比</Button>
           </div>
 
           <Table
@@ -248,7 +254,7 @@ class DepartmentList extends Component {
 
           <div slot="footer">
             <Pagination
-              total={30 || total}
+              total={total}
               pageIndex={pageNumber}
               pageSize={pageSize}
               change={this.pageChange}

@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 10:27:55
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-03 16:31:26
+ * @LastEditTime: 2021-03-05 17:04:27
  */
 import { lazy } from 'react'
 // Layout
@@ -125,6 +125,13 @@ export const asyncRouter = [
       }
     ]
   },
+  // {
+  //   path: 'https://www.baidu.com',
+  //   meta: {
+  //     title: '百度',
+  //     icon: 'FileAddOutlined'
+  //   }
+  // },
   // 编辑
   {
     path: '/edit',

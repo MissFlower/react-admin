@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 14:14:03
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-03 17:49:56
+ * @LastEditTime: 2021-03-05 17:00:32
  */
 import React, { Component, createElement } from 'react'
 import { Link, withRouter } from 'react-router-dom'
@@ -16,6 +16,9 @@ const { SubMenu } = Menu
 // TODO 路由列表在做权限的时候会进行处理 这里的路由应该是处理后的权限路由
 import { constantRouter, asyncRouter } from 'src/router'
 const routes = [...constantRouter, ...asyncRouter]
+
+// utils
+import { isExternal } from 'src/utils/validate'
 
 // 封装一个构造函数
 class MenuNode {
@@ -127,7 +130,7 @@ class MenuItem extends Component {
     })
   }
 
-  // 子集菜单处理
+  // 父集菜单处理
   renderSubMenu = ({ path, children, hidden = false, alwaysShow = false, meta: { icon, title } = { icon: '' }}) => {
     // 不展示
     if (hidden) {
@@ -159,7 +162,7 @@ class MenuItem extends Component {
     )
   }
 
-  // 无子集菜单处理
+  // 子集菜单处理
   renderMenuItem = ({ path, hidden = false, meta: { title, icon }}) => {
     return (
       !hidden &&
@@ -176,7 +179,11 @@ class MenuItem extends Component {
             : ''
         }
       >
-        <Link to={path}>{title}</Link>
+        {
+          isExternal(path)
+            ? <a href={path} rel="noopener noreferrer" target="_blank">{title}</a>
+            : <Link to={path}>{title}</Link>
+        }
       </Menu.Item>
     )
   }

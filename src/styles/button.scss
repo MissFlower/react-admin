@@ -1,5 +1,3 @@
-.operation_btn {
-  button + button {
-    margin-left: 8px;
-  }
+.ant-btn + .ant-btn {
+  margin-left: 12px;
 }
