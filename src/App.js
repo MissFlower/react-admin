@@ -4,10 +4,12 @@
  * @Author: AiDongYang
  * @Date: 2020-10-22 16:10:13
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-05 09:49:12
+ * @LastEditTime: 2021-03-10 16:27:42
  */
 import React, { Suspense } from 'react'
 import { Switch, BrowserRouter, Redirect } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import store from 'src/redux'
 
 import { Spin } from 'antd'
 
@@ -23,37 +25,30 @@ class App extends React.Component {
     this.state = {}
   }
 
-  renderRoute = routes => {
-    // const routeList = new Set()
-    // routes.map(route => {
-    //   routeList.add({
-    //     path: route.path,
-    //     component: route.component,
-    //     exact: !route.path === '/app'
-    //   })
-    // })
-    // const routeLists = []
-
-    return routes.map(item => (
+  renderRoute = routes => (
+    routes.map(route => (
       <PrivateRouter
-        path={item.path}
-        key={item.path}
-        component={item.component}
-        exact={item.path !== '/app'}
+        path={route.path}
+        key={route.path}
+        component={route.component}
+        meta={route.meta}
+        exact={route.path !== '/app'}
       />
     ))
-  }
+  )
 
   render() {
     // console.log(this.renderRoute(routes))
     return (
       <Suspense fallback={<div className="loading"><Spin size="large" /></div>}>
-        <BrowserRouter>
-          <Switch>
-            {this.renderRoute(routes)}
-            <Redirect to="/app/index" from="" />
-          </Switch>
-        </BrowserRouter>
+        <Provider store={store}>
+          <BrowserRouter>
+            <Switch>
+              {this.renderRoute(routes)}
+              <Redirect to="/app/index" from="/" />
+            </Switch>
+          </BrowserRouter>
+        </Provider>
       </Suspense>
     )
   }

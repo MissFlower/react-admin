@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-18 17:22:42
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-04 17:23:37
+ * @LastEditTime: 2021-03-10 13:52:41
  */
 import React, { Component } from 'react'
 // 通过withRouter加工后的组件会多出一个history props 这是就可以通过history的push方法跳转路由了
@@ -44,6 +44,7 @@ class LoginForm extends Component {
   }
 
   onFinish = async values => {
+    const path = this.props.location.search.split('?redirect=')[1] || '/'
     try {
       const { password, verifyCode } = this.state
       this.setState({
@@ -56,7 +57,7 @@ class LoginForm extends Component {
       })
       setToken(TOKEN_NAME, token)
       setToken(USER_NAME, username)
-      this.props.history.push('/app/index')
+      this.props.history.push(path)
     } catch (error) {
       console.log(error)
     } finally {
@@ -71,27 +72,11 @@ class LoginForm extends Component {
     this.props.toggleForm(type)
   }
 
-  // username输入
-  usernameChange = e => {
-    const val = e.target.value
+  // 处理用户名 密码 验证码变化处理值
+  handleChange = e => {
+    const { name, value } = e.target
     this.setState({
-      username: val
-    })
-  }
-
-  // password输入
-  passwordChange = e => {
-    const val = e.target.value
-    this.setState({
-      password: val
-    })
-  }
-
-  // verifyCode输入
-  verifyCodeChange = e => {
-    const val = e.target.value
-    this.setState({
-      verifyCode: val
+      [name]: value
     })
   }
 
@@ -148,7 +133,8 @@ class LoginForm extends Component {
 
               <Input
                 value={username}
-                onChange={this.usernameChange}
+                name="username"
+                onChange={this.handleChange}
                 prefix={<UserOutlined className="site-form-item-icon" />}
                 placeholder="Username"
               />
@@ -170,9 +156,10 @@ class LoginForm extends Component {
               <Input
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 type="password"
+                name="password"
                 placeholder="Password"
                 autoComplete="on"
-                onChange={this.passwordChange}
+                onChange={this.handleChange}
               />
             </Form.Item>
 
@@ -195,7 +182,8 @@ class LoginForm extends Component {
                   <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     placeholder="VerifyCode"
-                    onChange={this.verifyCodeChange}
+                    name="verifyCode"
+                    onChange={this.handleChange}
                   />
                 </Col>
                 <Col span={9}>

@@ -4,11 +4,12 @@
  * @Author: AiDongYang
  * @Date: 2021-02-24 11:09:33
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-02 14:55:34
+ * @LastEditTime: 2021-03-10 14:28:10
  */
 import React, { Component, Suspense } from 'react'
 import { Switch } from 'react-router-dom'
 import { Spin } from 'antd'
+import path from 'path'
 
 import PrivateRouter from 'src/components/PrivateRouter'
 
@@ -22,17 +23,23 @@ class RouterView extends Component {
     this.state = {}
   }
 
-  renderRoute = routes => {
+  resolvePath = (parentPath, routerPath) => (
+    path.resolve(parentPath, routerPath)
+  )
+
+  renderRoute = (routes, parentPath = '') => {
     return routes.map(route => {
       if (route.children) {
-        return this.renderRoute(route.children)
+        return this.renderRoute(route.children, route.path)
       } else {
+        const routerPath = this.resolvePath(parentPath, route.path)
         return (
           <PrivateRouter
-            path={route.path}
-            key={route.path}
-            exact
+            path={routerPath}
+            key={routerPath}
             component={route.component}
+            meta={route.meta}
+            exact
           />
         )
       }

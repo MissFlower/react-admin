@@ -4,10 +4,11 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 14:14:03
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-05 17:00:32
+ * @LastEditTime: 2021-03-10 14:25:14
  */
 import React, { Component, createElement } from 'react'
 import { Link, withRouter } from 'react-router-dom'
+import path from 'path'
 
 import { Menu, message } from 'antd'
 import * as Icon from '@ant-design/icons'
@@ -23,8 +24,7 @@ import { isExternal } from 'src/utils/validate'
 // 封装一个构造函数
 class MenuNode {
   constructor(menuItem, parent = null) {
-    this.path = menuItem.path
-    this.openMenu = menuItem.openMenu
+    this.path = path.resolve(parent?.path, menuItem.path)
     this.activeMenu = menuItem.activeMenu
     this.parent = parent
   }
@@ -111,8 +111,8 @@ class MenuItem extends Component {
       }
     }
     // 上面所有的地址都匹配不到就会进行拦截，显示没有权限，跳转到欢迎页
-    if (this.props.history.location.pathname !== '/' && this.props.history.location.pathname !== '/welcome' && this.props.history.location.pathname !== '/404') {
-      this.props.history.push('/welcome')
+    if (this.props.history.location.pathname !== '/' && this.props.history.location.pathname !== '/404') {
+      this.props.history.push('/404')
       message.error('对不起，您没有权限')
     }
     // 如果一个路由都没有匹配上则关闭菜单
@@ -138,7 +138,7 @@ class MenuItem extends Component {
     }
     // 处理子路由只有一个的情况
     if (children.length === 1 && !children.children && !alwaysShow) {
-      return this.renderMenuItem(children[0])
+      return this.renderMenuItem(path, children[0])
     }
     return (
       <SubMenu
@@ -156,18 +156,19 @@ class MenuItem extends Component {
         {children.map(child => {
           return child?.children && child.children.length
             ? this.renderSubMenu(child)
-            : this.renderMenuItem(child)
+            : this.renderMenuItem(path, child)
         })}
       </SubMenu>
     )
   }
 
   // 子集菜单处理
-  renderMenuItem = ({ path, hidden = false, meta: { title, icon }}) => {
+  renderMenuItem = (parentPath, { path, hidden = false, meta: { title, icon }}) => {
+    const routerPath = this.resolvePath(parentPath, path)
     return (
       !hidden &&
       <Menu.Item
-        key={path}
+        key={routerPath}
         icon={
           icon
             ? createElement(
@@ -180,13 +181,17 @@ class MenuItem extends Component {
         }
       >
         {
-          isExternal(path)
-            ? <a href={path} rel="noopener noreferrer" target="_blank">{title}</a>
-            : <Link to={path}>{title}</Link>
+          isExternal(routerPath)
+            ? <a href={routerPath} rel="noopener noreferrer" target="_blank">{title}</a>
+            : <Link to={routerPath}>{title}</Link>
         }
       </Menu.Item>
     )
   }
+
+  resolvePath = (parentPath, routerPath) => (
+    path.resolve(parentPath, routerPath)
+  )
 
   menuOpenChange = openKeys => {
     // 反复点击一个菜单组
@@ -224,7 +229,7 @@ class MenuItem extends Component {
           routes?.map(route => {
             return route?.children && route.children.length
               ? this.renderSubMenu(route)
-              : this.renderMenuItem(route)
+              : this.renderMenuItem('', route)
           })
         }
       </Menu>

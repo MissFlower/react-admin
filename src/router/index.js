@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 10:27:55
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-05 17:04:27
+ * @LastEditTime: 2021-03-10 14:00:57
  */
 import { lazy } from 'react'
 // Layout
@@ -74,13 +74,14 @@ export const asyncRouter = [
   {
     path: '/app/department',
     component: MainLayout,
+    redirect: '',
     meta: {
       title: '部门管理',
       icon: 'TeamOutlined'
     },
     children: [
       {
-        path: '/app/department/list',
+        path: 'list',
         component: lazy(() => import('@/views/Department/departmentList')),
         meta: {
           title: '部门列表',
@@ -88,7 +89,7 @@ export const asyncRouter = [
         }
       },
       {
-        path: '/app/department/add',
+        path: 'add',
         component: lazy(() => import('src/views/Department/addDepartment')),
         meta: {
           title: '添加部门',
