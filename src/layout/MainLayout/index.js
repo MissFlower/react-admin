@@ -4,12 +4,19 @@
  * @Author: AiDongYang
  * @Date: 2021-02-22 17:03:18
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-25 18:13:23
+ * @LastEditTime: 2021-03-19 16:08:16
  */
 import React, { Component } from 'react'
 
 import { Layout } from 'antd'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 const { Sider, Header, Content } = Layout
+
+import {
+  actions as appActions,
+  getSideBarOpened
+} from 'src/redux/modules/app'
 
 import './layout.scss'
 
@@ -20,27 +27,15 @@ import RouterView from './routerView'
 class MainLayout extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      collapsed: false
-    }
-  }
-
-  UNSAFE_componentWillMount() {
-    this.setState({
-      collapsed: JSON.parse(localStorage.getItem('collapsed'))
-    })
+    this.state = {}
   }
 
   toggleCollapsed = () => {
-    const collapsed = !this.state.collapsed
-    this.setState({
-      collapsed
-    })
-    localStorage.setItem('collapsed', collapsed)
+    this.props.TOGGLE_SIDEBAR('aa')
   }
 
   render() {
-    const { collapsed } = this.state
+    const { collapsed } = this.props
     return (
       <Layout className="layout-wrap">
         <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -59,4 +54,16 @@ class MainLayout extends Component {
   }
 }
 
-export default MainLayout
+const mapStateToProps = (state, props) => {
+  return {
+    collapsed: getSideBarOpened(state)
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    ...bindActionCreators(appActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainLayout)

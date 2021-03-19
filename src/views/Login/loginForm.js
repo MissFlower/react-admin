@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-18 17:22:42
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-10 13:52:41
+ * @LastEditTime: 2021-03-19 16:11:18
  */
 import React, { Component } from 'react'
 // 通过withRouter加工后的组件会多出一个history props 这是就可以通过history的push方法跳转路由了
@@ -16,13 +16,12 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { passwordReg, validEmail } from 'src/utils/validate'
 // 加密
 import CryptoJs from 'crypto-js'
-// API
-import { login } from 'src/api/user'
 // 组件
 import VerifyCode from 'src/components/VerifyCode'
-// token
-import { setToken } from 'src/utils/token'
-import { TOKEN_NAME, USER_NAME } from 'src/settings'
+
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { actions as userActions } from 'src/redux/modules/user'
 
 class LoginForm extends Component {
   constructor() {
@@ -50,13 +49,11 @@ class LoginForm extends Component {
       this.setState({
         loading: true
       })
-      const { token, username } = await login({
+      await this.props.LOGIN({
         username: this.state.username,
         password: CryptoJs.MD5(password).toString(),
         code: verifyCode
       })
-      setToken(TOKEN_NAME, token)
-      setToken(USER_NAME, username)
       this.props.history.push(path)
     } catch (error) {
       console.log(error)
@@ -215,4 +212,13 @@ class LoginForm extends Component {
   }
 }
 
-export default withRouter(LoginForm)
+const mapDispatchToProps = dispatch => {
+  return {
+    ...bindActionCreators(userActions, dispatch)
+  }
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(withRouter(LoginForm))

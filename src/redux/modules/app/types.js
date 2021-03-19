@@ -6,3 +6,4 @@
  * @LastEditors: AiDongYang
  * @LastEditTime: 2021-03-10 15:57:27
  */
+export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'
