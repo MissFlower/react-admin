@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 11:12:12
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-10 13:57:00
+ * @LastEditTime: 2021-03-26 17:26:52
  */
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'
@@ -25,6 +25,7 @@ class PrivateRouter extends Component {
     const { pathname, search } = location
     const hasToken = getToken(TOKEN_NAME)
     document.title = getPageTitle(meta?.title)
+
     if (hasToken) {
       // 如果是登录状态 想要跳转到登录 重定向到主页
       if (pathname === '/login') {

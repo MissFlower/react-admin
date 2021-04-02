@@ -4,10 +4,10 @@
  * @Author: AiDongYang
  * @Date: 2020-10-22 16:10:13
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-18 18:03:18
+ * @LastEditTime: 2021-03-26 17:57:32
  */
 import React, { Suspense } from 'react'
-import { Switch, BrowserRouter, Redirect } from 'react-router-dom'
+import { Switch, BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import configureStore from 'src/redux'
 
@@ -16,8 +16,8 @@ import { Spin } from 'antd'
 import PrivateRouter from 'src/components/PrivateRouter'
 
 // TODO 路由列表在做权限的时候会进行处理 这里的路由应该是处理后的权限路由
-import { constantRouter } from 'src/router'
-const routes = [...constantRouter]
+import { constantRouter, asyncRouter } from 'src/router'
+const routes = [...constantRouter, ...asyncRouter]
 const store = configureStore()
 
 class App extends React.Component {
@@ -33,7 +33,7 @@ class App extends React.Component {
         key={route.path}
         component={route.component}
         meta={route.meta}
-        exact={route.path !== '/app'}
+        exact={route.path !== '/'}
       />
     ))
   )
@@ -46,7 +46,6 @@ class App extends React.Component {
           <BrowserRouter>
             <Switch>
               {this.renderRoute(routes)}
-              <Redirect to="/app/index" from="/" />
             </Switch>
           </BrowserRouter>
         </Provider>

@@ -4,13 +4,13 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 14:14:03
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-19 16:20:57
+ * @LastEditTime: 2021-03-26 17:55:10
  */
 import React, { Component, createElement } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import path from 'path'
 
-import { Menu, message } from 'antd'
+import { Menu } from 'antd'
 import * as Icon from '@ant-design/icons'
 const { SubMenu } = Menu
 
@@ -84,11 +84,14 @@ class MenuItem extends Component {
   // 通过地址栏路由设置sidebar当前路由状态
   setActiveMenu = () => {
     const { pathname } = this.props.location
+    console.log(this.props)
     // 定义一个数据,判断用户是否有权限访问
     for (let menuItem of this.menuTree) {
       // 使用正则判断当前浏览器path是否与菜单项中的path相匹配，避免路由传参
-      const isActivePath = new RegExp(`^${menuItem.path}`).test(pathname)
+      // const isActivePath = new RegExp(`^${menuItem.path}`).test(pathname)
+      const isActivePath = menuItem.path === pathname
       if (isActivePath) {
+        // console.log(menuItem.path, pathname)
         // 判断当前路由是否有自定义要高亮路由
         const activeMenu = menuItem.activeMenu
         if (activeMenu) {
@@ -110,10 +113,15 @@ class MenuItem extends Component {
         return
       }
     }
+    // 根目录进行重定向
+    if (this.props.history.location.pathname === '/') {
+      this.props.history.push('/index')
+      return
+    }
     // 上面所有的地址都匹配不到就会进行拦截，显示没有权限，跳转到欢迎页
-    if (this.props.history.location.pathname !== '/' && this.props.history.location.pathname !== '/404') {
+    if (this.props.history.location.pathname !== '/404') {
       this.props.history.push('/404')
-      message.error('对不起，您没有权限')
+      // message.error('对不起，您没有权限')
     }
     // 如果一个路由都没有匹配上则关闭菜单
     this.setState({

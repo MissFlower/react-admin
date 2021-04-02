@@ -25,7 +25,7 @@ class TableListWrap extends Component {
     return (
       <div className="table-list-wrap">
         {
-          children.length
+          children && Array.isArray(children)
             ? children.map((child, index) => this.renderChild(child, index))
             : this.renderChild(children)
         }

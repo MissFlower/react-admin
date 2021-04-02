@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-19 17:42:23
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-05 17:00:45
+ * @LastEditTime: 2021-03-22 17:07:43
  */
 module.exports = {
   'env': {
@@ -278,6 +278,8 @@ module.exports = {
     'no-useless-escape': 0,
     // 在对象或数组中不允许尾随逗号
     'comma-dangle': [2, 'never'],
+    // 要求使用 === 和 !==
+    'eqeqeq': [1, 'always'],
 
     // ////////////
     // ES6.相关 //

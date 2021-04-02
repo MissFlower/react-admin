@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 10:27:55
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-19 11:26:28
+ * @LastEditTime: 2021-03-26 18:09:15
  */
 import { lazy } from 'react'
 // Layout
@@ -21,11 +21,28 @@ export const constantRouter = [
     }
   },
   {
-    path: '/app',
+    path: '/401',
+    component: lazy(() => import('src/views/ErrorPage/401')),
+    hidden: true,
+    meta: {
+      title: '401'
+    }
+  },
+  {
+    path: '/404',
+    component: lazy(() => import('src/views/ErrorPage/404')),
+    hidden: true,
+    meta: {
+      title: '404'
+    }
+  },
+  // 根路径要放到一层级路径最下面
+  {
+    path: '/',
     component: MainLayout,
     children: [
       {
-        path: '/app/index',
+        path: 'index',
         component: lazy(() => import('src/views/Home')),
         meta: {
           title: 'Home',
@@ -33,20 +50,12 @@ export const constantRouter = [
         }
       }
     ]
-  },
-  {
-    path: '/401',
-    component: lazy(() => import('src/views/ErrorPage/401')),
-    hidden: true,
-    meta: {
-      title: '401'
-    }
   }
 ]
 
 export const asyncRouter = [
   {
-    path: '/app/user',
+    path: '/user',
     component: MainLayout,
     meta: {
       title: '用户管理',
@@ -54,7 +63,7 @@ export const asyncRouter = [
     },
     children: [
       {
-        path: '/app/user/list',
+        path: '/user/list',
         component: lazy(() => import('src/views/User/userList')),
         meta: {
           title: '用户列表',
@@ -62,7 +71,7 @@ export const asyncRouter = [
         }
       },
       {
-        path: '/app/user/add',
+        path: '/user/add',
         component: lazy(() => import('src/views/User/addUser')),
         meta: {
           title: '添加用户',
@@ -72,7 +81,7 @@ export const asyncRouter = [
     ]
   },
   {
-    path: '/app/department',
+    path: '/department',
     component: MainLayout,
     redirect: '',
     meta: {
@@ -99,11 +108,11 @@ export const asyncRouter = [
     ]
   },
   {
-    path: '/app/leave',
+    path: '/leave',
     component: MainLayout,
     children: [
       {
-        path: '/app/leave',
+        path: '/leave',
         component: lazy(() => import('src/views/Leave')),
         meta: {
           title: '请假',
@@ -113,11 +122,11 @@ export const asyncRouter = [
     ]
   },
   {
-    path: '/app/workovertime',
+    path: '/workovertime',
     component: MainLayout,
     children: [
       {
-        path: '/app/workovertime',
+        path: '/workovertime',
         component: lazy(() => import('src/views/WorkOverTime')),
         meta: {
           title: '加班',
@@ -140,9 +149,9 @@ export const asyncRouter = [
     hidden: true,
     children: [
       {
-        path: '/app/department/edit',
+        path: '/department/edit',
         component: lazy(() => import('src/views/Department/addDepartment')),
-        activeMenu: '/app/department/add',
+        activeMenu: '/department/add',
         meta: {
           title: '编辑部门',
           icon: ''
