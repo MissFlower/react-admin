@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 10:27:55
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-26 18:09:15
+ * @LastEditTime: 2021-04-09 14:14:51
  */
 import { lazy } from 'react'
 // Layout
@@ -103,7 +103,61 @@ export const asyncRouter = [
         meta: {
           title: '添加部门',
           icon: ''
-        }
+        },
+        children: [
+          {
+            path: 'list1',
+            component: lazy(() => import('@/views/Department/departmentList')),
+            meta: {
+              title: '部门列表',
+              icon: ''
+            }
+          },
+          {
+            path: 'add1',
+            component: lazy(() => import('src/views/Department/addDepartment')),
+            meta: {
+              title: '添加部门',
+              icon: ''
+            },
+            children: [
+              {
+                path: 'list2',
+                component: lazy(() => import('@/views/Department/departmentList')),
+                meta: {
+                  title: '部门列表',
+                  icon: ''
+                }
+              },
+              {
+                path: 'add2',
+                component: lazy(() => import('src/views/Department/addDepartment')),
+                meta: {
+                  title: '添加部门',
+                  icon: ''
+                },
+                children: [
+                  {
+                    path: 'list3',
+                    component: lazy(() => import('@/views/Department/departmentList')),
+                    meta: {
+                      title: '部门列表',
+                      icon: ''
+                    }
+                  },
+                  {
+                    path: 'add3',
+                    component: lazy(() => import('src/views/Department/addDepartment')),
+                    meta: {
+                      title: '添加部门',
+                      icon: ''
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },

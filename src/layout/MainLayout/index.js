@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-22 17:03:18
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-19 16:08:16
+ * @LastEditTime: 2021-04-08 19:14:17
  */
 import React, { Component } from 'react'
 
@@ -43,7 +43,7 @@ class MainLayout extends Component {
         </Sider>
         <Layout>
           <Header className="layout-header">
-            <Navbar collapsed={collapsed} toggleCollapsed={this.toggleCollapsed} />
+            <Navbar toggleCollapsed={this.toggleCollapsed} />
           </Header>
           <Content className="layout-content">
             <RouterView />

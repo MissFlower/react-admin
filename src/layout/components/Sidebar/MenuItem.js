@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 14:14:03
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-26 17:55:10
+ * @LastEditTime: 2021-04-09 14:07:19
  */
 import React, { Component, createElement } from 'react'
 import { Link, withRouter } from 'react-router-dom'
@@ -24,7 +24,7 @@ import { isExternal } from 'src/utils/validate'
 // 封装一个构造函数
 class MenuNode {
   constructor(menuItem, parent = null) {
-    this.path = path.resolve(parent?.path, menuItem.path)
+    this.path = path.resolve(parent?.path || '', menuItem.path)
     this.activeMenu = menuItem.activeMenu
     this.parent = parent
   }
@@ -47,7 +47,8 @@ class MenuItem extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(props) {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      clearTimeout(timer)
       !props.collapsed && this.setActiveMenu()
     }, 0)
   }
@@ -55,7 +56,7 @@ class MenuItem extends Component {
   initMenu = (routes, parent = null) => {
     routes.map(route => {
       if (route.children) {
-        this.initMenu(route.children, new MenuNode(route, route.path))
+        this.initMenu(route.children, new MenuNode(route, parent))
       } else {
         route.path !== '*' && this.menuTree.push(new MenuNode(route, parent))
       }
@@ -84,7 +85,7 @@ class MenuItem extends Component {
   // 通过地址栏路由设置sidebar当前路由状态
   setActiveMenu = () => {
     const { pathname } = this.props.location
-    console.log(this.props)
+    // console.log(this.props)
     // 定义一个数据,判断用户是否有权限访问
     for (let menuItem of this.menuTree) {
       // 使用正则判断当前浏览器path是否与菜单项中的path相匹配，避免路由传参
@@ -130,14 +131,6 @@ class MenuItem extends Component {
     })
   }
 
-  // 点击菜单 高光展示
-  menuClick = ({ item, key, keyPath, domEvent }) => {
-    this.setState({
-      openKeys: [keyPath[keyPath.length - 1]],
-      selectedKeys: [key]
-    })
-  }
-
   // 父集菜单处理
   renderSubMenu = ({ path, children, hidden = false, alwaysShow = false, meta: { icon, title } = { icon: '' }}) => {
     // 不展示
@@ -162,9 +155,13 @@ class MenuItem extends Component {
         title={title}
       >
         {children.map(child => {
-          return child?.children && child.children.length
-            ? this.renderSubMenu(child)
-            : this.renderMenuItem(path, child)
+          if (child?.children?.length) {
+            // 处理路由中我们定义的path和父级的path进行拼接 满足我们定义路由的path时不必每次重复写父级的path 在这一步进行处理
+            child.path = this.resolvePath(path, child.path)
+            return this.renderSubMenu(child)
+          } else {
+            return this.renderMenuItem(path, child)
+          }
         })}
       </SubMenu>
     )
@@ -203,6 +200,7 @@ class MenuItem extends Component {
 
   menuOpenChange = openKeys => {
     // 反复点击一个菜单组
+    console.log(openKeys)
     if (openKeys.length === 1 || openKeys.length === 0) {
       this.setState({
         openKeys
@@ -212,8 +210,9 @@ class MenuItem extends Component {
     const lastOpenKey = openKeys[openKeys.length - 1]
     // 如果点击的还是同一个大菜单下
     if (lastOpenKey.includes(openKeys[0])) {
+      console.log('ninliale')
       this.setState({
-        openKeys: [lastOpenKey]
+        openKeys
       })
     } else {
       this.setState({
@@ -231,7 +230,6 @@ class MenuItem extends Component {
         openKeys={openKeys}
         selectedKeys={selectedKeys}
         onOpenChange={this.menuOpenChange}
-        onClick={this.menuClick}
       >
         {
           routes?.map(route => {
