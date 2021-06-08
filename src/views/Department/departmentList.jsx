@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 14:45:28
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-05 16:23:49
+ * @LastEditTime: 2021-04-21 10:52:51
  */
 import React, { Component, Fragment } from 'react'
 
@@ -76,11 +76,6 @@ class DepartmentList extends Component {
     this.getList({
       ...params
     })
-  }
-
-  // 监听组件内部状态的变化
-  UNSAFE_componentWillReceiveProps(props) {
-    console.log(props)
   }
 
   componentWillUnmount() {
@@ -206,6 +201,11 @@ class DepartmentList extends Component {
     })
   }
 
+  // 下载
+  download = () => {
+    console.log(this)
+  }
+
   render() {
     const { columns, tableData, total } = this.state
     const { pageNumber, pageSize } = this.state.params
@@ -240,7 +240,7 @@ class DepartmentList extends Component {
         <TableListWrap>
           <div slot="header">
             <Button type="primary" className="operation-left" disabled={this.batchDeleteDisabled()} onClick={() => this.deleteDepartmentListHandle()}>批量删除</Button>
-            <Button type="primary" className="operation-right">数据下载</Button>
+            <Button type="primary" className="operation-right" onClick={this.download}>数据下载</Button>
             <Button type="primary" className="operation-right">数据对比</Button>
           </div>
 

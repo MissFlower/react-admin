@@ -4,9 +4,10 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 10:27:55
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-04-09 14:14:51
+ * @LastEditTime: 2021-04-21 16:18:43
  */
 import { lazy } from 'react'
+const path = require('path')
 // Layout
 // import MainLayout from 'src/layout/MainLayout'
 const MainLayout = lazy(() => import('src/layout/MainLayout'))
@@ -103,61 +104,62 @@ export const asyncRouter = [
         meta: {
           title: '添加部门',
           icon: ''
-        },
-        children: [
-          {
-            path: 'list1',
-            component: lazy(() => import('@/views/Department/departmentList')),
-            meta: {
-              title: '部门列表',
-              icon: ''
-            }
-          },
-          {
-            path: 'add1',
-            component: lazy(() => import('src/views/Department/addDepartment')),
-            meta: {
-              title: '添加部门',
-              icon: ''
-            },
-            children: [
-              {
-                path: 'list2',
-                component: lazy(() => import('@/views/Department/departmentList')),
-                meta: {
-                  title: '部门列表',
-                  icon: ''
-                }
-              },
-              {
-                path: 'add2',
-                component: lazy(() => import('src/views/Department/addDepartment')),
-                meta: {
-                  title: '添加部门',
-                  icon: ''
-                },
-                children: [
-                  {
-                    path: 'list3',
-                    component: lazy(() => import('@/views/Department/departmentList')),
-                    meta: {
-                      title: '部门列表',
-                      icon: ''
-                    }
-                  },
-                  {
-                    path: 'add3',
-                    component: lazy(() => import('src/views/Department/addDepartment')),
-                    meta: {
-                      title: '添加部门',
-                      icon: ''
-                    }
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+        }
+        // ,
+        // children: [
+        //   {
+        //     path: 'list1',
+        //     component: lazy(() => import('@/views/Department/departmentList')),
+        //     meta: {
+        //       title: '部门列表',
+        //       icon: ''
+        //     }
+        //   },
+        //   {
+        //     path: 'add1',
+        //     component: lazy(() => import('src/views/Department/addDepartment')),
+        //     meta: {
+        //       title: '添加部门',
+        //       icon: ''
+        //     },
+        //     children: [
+        //       {
+        //         path: 'list2',
+        //         component: lazy(() => import('@/views/Department/departmentList')),
+        //         meta: {
+        //           title: '部门列表',
+        //           icon: ''
+        //         }
+        //       },
+        //       {
+        //         path: 'add2',
+        //         component: lazy(() => import('src/views/Department/addDepartment')),
+        //         meta: {
+        //           title: '添加部门',
+        //           icon: ''
+        //         },
+        //         children: [
+        //           {
+        //             path: 'list3',
+        //             component: lazy(() => import('@/views/Department/departmentList')),
+        //             meta: {
+        //               title: '部门列表',
+        //               icon: ''
+        //             }
+        //           },
+        //           {
+        //             path: 'add3',
+        //             component: lazy(() => import('src/views/Department/addDepartment')),
+        //             meta: {
+        //               title: '添加部门',
+        //               icon: ''
+        //             }
+        //           }
+        //         ]
+        //       }
+        //     ]
+        //   }
+        // ]
       }
     ]
   },
@@ -166,7 +168,7 @@ export const asyncRouter = [
     component: MainLayout,
     children: [
       {
-        path: '/leave',
+        path: '',
         component: lazy(() => import('src/views/Leave')),
         meta: {
           title: '请假',
@@ -180,7 +182,7 @@ export const asyncRouter = [
     component: MainLayout,
     children: [
       {
-        path: '/workovertime',
+        path: '',
         component: lazy(() => import('src/views/WorkOverTime')),
         meta: {
           title: '加班',
@@ -203,7 +205,7 @@ export const asyncRouter = [
     hidden: true,
     children: [
       {
-        path: '/department/edit',
+        path: 'department',
         component: lazy(() => import('src/views/Department/addDepartment')),
         activeMenu: '/department/add',
         meta: {
@@ -222,3 +224,30 @@ export const asyncRouter = [
     }
   }
 ]
+
+const createRouter = () => {
+  // 初始化路由器配置
+  const initRouter = (routes, parentPath = '') => {
+    return routes.map((route, index) => {
+      if (route.children?.length) {
+        // 有子路由并且不是空
+        route.children = initRouter(route.children, path.resolve(parentPath, route.path))
+      } else {
+        route = transfromRoute(route, parentPath)
+      }
+      return route
+    })
+  }
+
+  // 改造路由
+  const transfromRoute = (route, parentPath = '') => ({
+    ...route,
+    parentPath,
+    fullPath: path.resolve(parentPath, route.path)
+  })
+
+  initRouter([...constantRouter, ...asyncRouter])
+}
+
+createRouter()
+// console.log([...constantRouter, ...asyncRouter])

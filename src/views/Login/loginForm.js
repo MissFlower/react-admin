@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-18 17:22:42
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-19 16:11:18
+ * @LastEditTime: 2021-04-19 15:00:01
  */
 import React, { Component } from 'react'
 // 通过withRouter加工后的组件会多出一个history props 这是就可以通过history的push方法跳转路由了
@@ -212,6 +212,8 @@ class LoginForm extends Component {
   }
 }
 
+// 容器组件
+/* 通过connect进行连接生成容器组件 */
 const mapDispatchToProps = dispatch => {
   return {
     ...bindActionCreators(userActions, dispatch)

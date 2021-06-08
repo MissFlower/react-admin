@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-03-19 14:51:36
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-19 16:35:58
+ * @LastEditTime: 2021-04-20 10:21:54
  */
 import Immutable from 'immutable'
 import * as types from './types'
@@ -19,7 +19,7 @@ const initialState = Immutable.fromJS({
 
 // action creators
 const _setName = name => ({
-  type: types.SET_TOKEN,
+  type: types.SET_NAME,
   payload: name
 })
 const _setToken = token => ({
@@ -27,6 +27,7 @@ const _setToken = token => ({
   payload: token
 })
 
+// 异步action
 export const actions = {
   [types.LOGIN]: params => {
     return dispatch => {
@@ -35,9 +36,10 @@ export const actions = {
           .then(response => {
             const { username, token } = response
             dispatch(_setName(username))
-            dispatch(_setToken(username))
+            dispatch(_setToken(token))
             localStorage.setItem('name', username)
             setToken(defaultSettings.TOKEN_NAME, token)
+            setToken(defaultSettings.USER_NAME, username)
             resolve(response)
           })
           .catch(error => {

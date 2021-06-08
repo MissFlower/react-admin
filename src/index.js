@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2020-10-22 16:10:13
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-03-05 09:49:44
+ * @LastEditTime: 2021-04-21 15:48:16
  */
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -17,6 +17,7 @@ import { ConfigProvider } from 'antd'
 import zhCN from 'antd/es/locale/zh_CN'
 
 ReactDOM.render(
+  // 检测代码中不合理的代码 比如ref字符串写法
   // <React.StrictMode>
   <ConfigProvider locale={zhCN}>
     <App />

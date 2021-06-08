@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-23 14:14:03
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-04-09 14:07:19
+ * @LastEditTime: 2021-04-21 16:14:46
  */
 import React, { Component, createElement } from 'react'
 import { Link, withRouter } from 'react-router-dom'
@@ -13,6 +13,11 @@ import path from 'path'
 import { Menu } from 'antd'
 import * as Icon from '@ant-design/icons'
 const { SubMenu } = Menu
+
+import { connect } from 'react-redux'
+import {
+  getSideBarOpened
+} from 'src/redux/modules/app'
 
 // TODO 路由列表在做权限的时候会进行处理 这里的路由应该是处理后的权限路由
 import { constantRouter, asyncRouter } from 'src/router'
@@ -38,19 +43,39 @@ class MenuItem extends Component {
       selectedKeys: []
     }
     this.menuTree = []
+    this.lastOpenKeys = []
   }
 
   // 生命周期
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
+    const { collapsed } = this.props
     this.initMenu(routes)
+    this.watchCollapsed(collapsed)
     this.setActiveMenu()
   }
 
-  UNSAFE_componentWillReceiveProps(props) {
-    const timer = setTimeout(() => {
-      clearTimeout(timer)
-      !props.collapsed && this.setActiveMenu()
-    }, 0)
+  UNSAFE_componentWillReceiveProps(nextProp) {
+    if (nextProp.collapsed !== this.props.collapsed) {
+      this.watchCollapsed(nextProp.collapsed)
+    }
+    if (nextProp.location.pathname !== this.props.location.pathname) {
+      this.setActiveMenu(nextProp.location)
+    }
+  }
+
+  watchCollapsed = collapsed => {
+    if (collapsed) {
+      this.lastOpenKeys = this.state.openKeys
+      this.setState({
+        openKeys: []
+      })
+    } else {
+      this.setState({
+        openKeys: this.lastOpenKeys
+      }, () => {
+        this.lastOpenKeys = []
+      })
+    }
   }
 
   initMenu = (routes, parent = null) => {
@@ -83,8 +108,8 @@ class MenuItem extends Component {
   }
 
   // 通过地址栏路由设置sidebar当前路由状态
-  setActiveMenu = () => {
-    const { pathname } = this.props.location
+  setActiveMenu = (path) => {
+    const { pathname } = path || this.props.location
     // console.log(this.props)
     // 定义一个数据,判断用户是否有权限访问
     for (let menuItem of this.menuTree) {
@@ -102,15 +127,22 @@ class MenuItem extends Component {
         // 没有自定义高亮路由 走默认
         const openKeys = []
         const selectedKeys = [menuItem.path]
+        console.log(selectedKeys)
         // 判断当前菜单是否有父级菜单，如果有父级菜单需要将其展开
         while (menuItem.parent) {
           openKeys.push(menuItem.parent.path)
           menuItem = menuItem.parent
         }
         this.setState({
-          openKeys: openKeys,
-          selectedKeys: selectedKeys
+          openKeys,
+          selectedKeys
         })
+        if (this.props.collapsed) {
+          this.lastOpenKeys = openKeys
+          this.setState({
+            openKeys: []
+          })
+        }
         return
       }
     }
@@ -200,7 +232,7 @@ class MenuItem extends Component {
 
   menuOpenChange = openKeys => {
     // 反复点击一个菜单组
-    console.log(openKeys)
+    // console.log(openKeys)
     if (openKeys.length === 1 || openKeys.length === 0) {
       this.setState({
         openKeys
@@ -210,7 +242,7 @@ class MenuItem extends Component {
     const lastOpenKey = openKeys[openKeys.length - 1]
     // 如果点击的还是同一个大菜单下
     if (lastOpenKey.includes(openKeys[0])) {
-      console.log('ninliale')
+      // console.log('ninliale')
       this.setState({
         openKeys
       })
@@ -242,5 +274,9 @@ class MenuItem extends Component {
     )
   }
 }
-
-export default withRouter(MenuItem)
+const mapStateToProps = (state, props) => {
+  return {
+    collapsed: getSideBarOpened(state)
+  }
+}
+export default connect(mapStateToProps, null)(withRouter(MenuItem))

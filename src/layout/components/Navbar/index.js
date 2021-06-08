@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-22 18:12:11
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-02-26 09:34:23
+ * @LastEditTime: 2021-04-21 13:44:24
  */
 import React, { Component, Fragment } from 'react'
 import {
@@ -19,7 +19,7 @@ class Navbar extends Component {
     super(props)
   }
 
-  toggleCollapsed = async() => {
+  toggleCollapsed = () => {
     this.props.toggleCollapsed()
   }
 

@@ -4,7 +4,7 @@
  * @Author: AiDongYang
  * @Date: 2021-02-22 17:03:18
  * @LastEditors: AiDongYang
- * @LastEditTime: 2021-04-08 19:14:17
+ * @LastEditTime: 2021-04-21 15:59:16
  */
 import React, { Component } from 'react'
 
@@ -39,7 +39,7 @@ class MainLayout extends Component {
     return (
       <Layout className="layout-wrap">
         <Sider trigger={null} collapsible collapsed={collapsed}>
-          <Sidebar collapsed={collapsed} />
+          <Sidebar />
         </Sider>
         <Layout>
           <Header className="layout-header">

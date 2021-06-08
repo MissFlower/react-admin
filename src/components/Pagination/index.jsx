@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Pagination } from 'antd'
 class PaginationComponent extends Component {
   static propTypes = {
-    pageSize: PropTypes.number,
+    pageSize: PropTypes.number.isRequired,
     pageIndex: PropTypes.number,
     total: PropTypes.number,
     pageSizeOptions: PropTypes.array
